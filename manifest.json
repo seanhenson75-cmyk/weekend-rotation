@@ -1,1 +1,1 @@
-{"name":"Weekend Rotation","short_name":"Weekend Rotation","start_url":"/","display":"standalone","background_color":"#f3f4f6","theme_color":"#111827","icons":[]}
+{"name":"Weekend Rotation","short_name":"Rotation","description":"Friday, Saturday and Sunday operator rotation","id":"/","start_url":"/","scope":"/","display":"standalone","orientation":"portrait","background_color":"#f3f4f6","theme_color":"#111827","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}

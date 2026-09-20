@@ -3,46 +3,27 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Weekend Rotation">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.svg">
 <title>Weekend Rotation</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f3f4f6;color:#111827}.wrap{max-width:980px;margin:auto;padding:18px}header{background:#111827;color:white;padding:22px 18px;border-radius:18px;margin-bottom:16px}h1{margin:0;font-size:28px}header p{margin:5px 0 0;color:#cbd5e1}.days{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.day{background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001}.day h2{margin:0;padding:14px 16px;background:#1f2937;color:#fff;font-size:19px}.row{padding:12px 14px;border-top:1px solid #e5e7eb}.op{font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}.person{font-size:18px;font-weight:800;margin-top:2px}.open{color:#b45309}.note{text-align:center;color:#6b7280;font-size:12px;margin:16px 0 4px}
+*{box-sizing:border-box}html,body{min-height:100%;background:#f3f4f6}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111827;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}.wrap{max-width:980px;margin:auto;padding:18px}header{background:#111827;color:white;padding:22px 18px;border-radius:18px;margin-bottom:16px}h1{margin:0;font-size:28px}header p{margin:5px 0 0;color:#cbd5e1}.days{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.day{background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001}.day h2{margin:0;padding:14px 16px;background:#1f2937;color:#fff;font-size:19px}.row{padding:12px 14px;border-top:1px solid #e5e7eb}.op{font-size:12px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}.person{font-size:18px;font-weight:800;margin-top:2px}.open{color:#b45309}.note{text-align:center;color:#6b7280;font-size:12px;margin:16px 0 4px}
 @media(max-width:720px){.wrap{padding:10px}.days{grid-template-columns:1fr;gap:10px}header{border-radius:14px;padding:18px 16px;margin-bottom:10px}h1{font-size:25px}.day{border-radius:14px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px}.op{max-width:62%}.person{font-size:17px;text-align:right}}
-</style>
-</head>
+</style></head>
 <body><main class="wrap"><header><h1>Weekend Rotation</h1><p>Friday • Saturday • Sunday</p></header><section id="days" class="days"></section><div class="note">Rotation continues automatically every weekend.</div></main>
 <script>
-const operations=[
-"M35 Grind (L4) — OP 20 (L4)",
-"M35 EDM (L4) — OP 25 (L4)",
-"Issue / HT All",
-"M35 Grind (L5) — OP 020 (L5)",
-"M35 EDM (L5) — OP 025 (L5)",
-"M51 Grind — OP 008",
-"M51 EDM — OP 010"
-];
-// Anchor from the supplied rotation sheet: Sunday 09/20/2026.
-const anchor=new Date(2026,8,20,12);
-const anchorPeople=["F. Murphy","C. Crawford","Open","J. Pepper","S. Henson","K. Poston","J. Revis"];
-function dateKey(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate(),12)}
-function isWeekendWorkday(d){return [5,6,0].includes(d.getDay())}
-function scheduledIndex(target){
- let a=dateKey(anchor),t=dateKey(target),n=0;
- if(t>=a){for(let d=new Date(a);d<t;d.setDate(d.getDate()+1))if(isWeekendWorkday(new Date(d.getFullYear(),d.getMonth(),d.getDate()+1,12)))n++}
- else{for(let d=new Date(a);d>t;d.setDate(d.getDate()-1))if(isWeekendWorkday(new Date(d.getFullYear(),d.getMonth(),d.getDate()-1,12)))n--}
- return n
-}
-function nextThree(){
- let d=new Date();d=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);const out=[];
- while(out.length<3){if(isWeekendWorkday(d))out.push(new Date(d));d.setDate(d.getDate()+1)}
- return out
-}
-function assignments(d){
- const shift=((scheduledIndex(d)%7)+7)%7;
- return operations.map((_,i)=>anchorPeople[(i-shift+7)%7])
-}
+const operations=["M35 Grind (L4) — OP 20 (L4)","M35 EDM (L4) — OP 25 (L4)","Issue / HT All","M35 Grind (L5) — OP 020 (L5)","M35 EDM (L5) — OP 025 (L5)","M51 Grind — OP 008","M51 EDM — OP 010"];
+const anchor=new Date(2026,8,20,12),anchorPeople=["F. Murphy","C. Crawford","Open","J. Pepper","S. Henson","K. Poston","J. Revis"];
+function norm(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate(),12)}
+function scheduled(d){return [5,6,0].includes(d.getDay())}
+function idx(target){let a=norm(anchor),t=norm(target),n=0;if(t>=a){for(let d=new Date(a);d<t;d.setDate(d.getDate()+1)){let x=new Date(d);x.setDate(x.getDate()+1);if(scheduled(x))n++}}else{for(let d=new Date(a);d>t;d.setDate(d.getDate()-1)){let x=new Date(d);x.setDate(x.getDate()-1);if(scheduled(x))n--}}return n}
+function next3(){let d=norm(new Date()),a=[];while(a.length<3){if(scheduled(d))a.push(new Date(d));d.setDate(d.getDate()+1)}return a}
+function assignments(d){let s=((idx(d)%7)+7)%7;return operations.map((_,i)=>anchorPeople[(i-s+7)%7])}
 const names=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
-document.getElementById("days").innerHTML=nextThree().map(d=>{
- const people=assignments(d);
- return '<article class="day"><h2>'+names[d.getDay()]+'</h2>'+operations.map((op,i)=>'<div class="row"><div class="op">'+op+'</div><div class="person '+(people[i]==="Open"?"open":"")+'">'+people[i]+'</div></div>').join("")+'</article>'
-}).join("");
+document.getElementById("days").innerHTML=next3().map(d=>{let p=assignments(d);return '<article class="day"><h2>'+names[d.getDay()]+'</h2>'+operations.map((o,i)=>'<div class="row"><div class="op">'+o+'</div><div class="person '+(p[i]==="Open"?"open":"")+'">'+p[i]+'</div></div>').join("")+'</article>'}).join("");
 </script></body></html>
